@@ -1,4 +1,5 @@
-﻿using Dapr.Client;
+﻿using Dapr;
+using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -33,5 +34,32 @@ namespace Subscriber.Controllers
         {
             await _daprClient.DeleteStateAsync(storeName, key);
         }
+
+        [HttpGet]
+        [Route("dapr/subscribe")]
+        public IActionResult Subscribe()
+        {
+            return NotFound();
+        }
+
+
+
+
+        public class testData
+        {
+            public int counter { get; set; }
+        }
+
+        [Topic("redis-pubsub", "testData")]
+        [HttpPost("/testData")]
+        public IActionResult PostWeathers(testData data)
+        {
+            if(data.counter == 22)
+            {
+
+            }
+            return NoContent();
+        }
+
     }
 }

@@ -3,6 +3,8 @@ version: '3.4'
 services:
   publisher:
     image: ${DOCKER_REGISTRY-}publisher
+    depends_on:
+      - redis
     build:
       context: .
       dockerfile: Publisher/Dockerfile
@@ -15,7 +17,10 @@ services:
     image: "daprio/daprd:latest"
     command: [ "./daprd", 
     "-app-id", "publisher", 
+    "-components-path", "/components",
     "-app-port", "80" ]
+    volumes:
+        - "./components/:/components"
     depends_on:
         - publisher
     network_mode: "service:publisher"
@@ -50,5 +55,6 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - service-network
+
 networks:
     service-network:

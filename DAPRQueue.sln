@@ -11,7 +11,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{63D790BF-6257-4462-B40C-FA1AF0E5C559}"
 	ProjectSection(SolutionItems) = preProject
-		components\kafka-pubsub.yaml = components\kafka-pubsub.yaml
+		components\redis-pubsub.yaml = components\redis-pubsub.yaml
 		components\redis-state.yaml = components\redis-state.yaml
 	EndProjectSection
 EndProject
