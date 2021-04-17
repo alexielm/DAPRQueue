@@ -41,10 +41,12 @@ namespace Subscriber
             );
 
             app.UseAuthorization();
+            app.UseCloudEvents();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSubscribeHandler();
             });
         }
     }

@@ -35,31 +35,18 @@ namespace Subscriber.Controllers
             await _daprClient.DeleteStateAsync(storeName, key);
         }
 
-        [HttpGet]
-        [Route("dapr/subscribe")]
-        public IActionResult Subscribe()
-        {
-            return NotFound();
-        }
-
-
-
-
         public class testData
         {
             public int counter { get; set; }
         }
 
-        [Topic("redis-pubsub", "testData")]
-        [HttpPost("/testData")]
-        public IActionResult PostWeathers(testData data)
-        {
-            if(data.counter == 22)
-            {
 
-            }
+        [Topic("redis-pubsub", "testData")]
+        [HttpPost("/weather")]
+        public async Task<IActionResult> PostWeathers(testData data)
+        {
+            await _daprClient.SaveStateAsync(storeName, key, data.counter);
             return NoContent();
         }
-
     }
 }

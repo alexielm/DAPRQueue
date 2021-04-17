@@ -1,5 +1,7 @@
+using Dapr.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,6 +23,11 @@ namespace Subscriber
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+            .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddSingleton(provider => new DaprClientBuilder().Build());
                 });
+
     }
 }
