@@ -3,8 +3,6 @@ version: '3.4'
 services:
   publisher:
     image: ${DOCKER_REGISTRY-}publisher
-    depends_on:
-      - redis
     build:
       context: .
       dockerfile: Publisher/Dockerfile
@@ -30,8 +28,6 @@ services:
     build:
       context: .
       dockerfile: Subscriber/Dockerfile
-    depends_on:
-      - redis
     networks:
       - service-network
     ports:
