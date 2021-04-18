@@ -30,8 +30,6 @@ services:
       dockerfile: Subscriber/Dockerfile
     networks:
       - service-network
-    ports:
-      - "5002:80"
 
   subscriber-dapr:
     image: "daprio/daprd:latest"

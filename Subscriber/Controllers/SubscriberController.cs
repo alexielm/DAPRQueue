@@ -10,7 +10,7 @@ namespace Subscriber.Controllers
     public class SubscriberController : ControllerBase
     {
         const string storeName = "redis-state";
-        const string key = "counter";
+        const string key = "total";
 
         private readonly DaprClient _daprClient;
 
@@ -18,14 +18,17 @@ namespace Subscriber.Controllers
         {
             _daprClient = daprClient ?? throw new ArgumentNullException(nameof(daprClient));
         }
+        public class items
+        {
+            public int total { get; set; }
+        }
 
         [HttpGet]
-        [Route("api/counter")]
+        [Route("api/total")]
         public async Task<object> GetCounter()
         {
-            var counter = await _daprClient.GetStateAsync<int>(storeName, key) + 1;
-            await _daprClient.SaveStateAsync(storeName, key, counter);
-            return new { counter };
+            var total = await _daprClient.GetStateAsync<int>(storeName, key);
+            return new items { total = total };
         }
 
         [HttpGet]
@@ -35,17 +38,13 @@ namespace Subscriber.Controllers
             await _daprClient.DeleteStateAsync(storeName, key);
         }
 
-        public class testData
-        {
-            public int counter { get; set; }
-        }
 
-
-        [Topic("redis-pubsub", "testData")]
-        [HttpPost("/weather")]
-        public async Task<IActionResult> PostWeathers(testData data)
+        [Topic("redis-pubsub", "newItems")]
+        [HttpPost("/newItems")]
+        public async Task<IActionResult> PostWeathers(items newItems)
         {
-            await _daprClient.SaveStateAsync(storeName, key, data.counter);
+            var total = await _daprClient.GetStateAsync<int>(storeName, key);
+            await _daprClient.SaveStateAsync(storeName, key, total + newItems.total);
             return NoContent();
         }
     }

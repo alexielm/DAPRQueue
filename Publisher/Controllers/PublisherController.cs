@@ -17,32 +17,38 @@ namespace Publisher.Controllers
             _daprClient = daprClient ?? throw new ArgumentNullException(nameof(daprClient));
         }
 
-        public class testData
+        public class items
         {
-            public int counter { get; set; }
+            public int total { get; set; }
         }
 
         [HttpGet]
-        [Route("api/counter")]
+        [Route("api/getTotal")]
         public async Task<object> CallCounterAPI()
         {
-            var response = await _daprClient.InvokeMethodAsync<testData>(
+            var response = await _daprClient.InvokeMethodAsync<items>(
                 HttpMethod.Get,
                 "subscriber",
-                "api/counter");
+                "api/total");
 
             return response;
         }
 
         [HttpGet]
-        [Route("api/publish")]
-        public async Task Publish()
+        [Route("api/clearItems")]
+        public async Task ClearCounter()
         {
-            var data = new testData
-            {
-                counter = 33
-            };
-            await _daprClient.PublishEventAsync("redis-pubsub", "testData", data);
+            await _daprClient.InvokeMethodAsync(
+                HttpMethod.Get,
+                "subscriber",
+                "api/clear");
+        }
+
+        [HttpGet]
+        [Route("api/addItems")]
+        public async Task Publish([FromQuery] int newItems)
+        {
+            await _daprClient.PublishEventAsync("redis-pubsub", "newItems", new items { total = newItems });
         }
     }
 }
