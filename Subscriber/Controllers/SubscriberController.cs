@@ -41,7 +41,7 @@ namespace Subscriber.Controllers
 
         [Topic("redis-pubsub", "newItems")]
         [HttpPost("/newItems")]
-        public async Task<IActionResult> PostWeathers(items newItems)
+        public async Task<IActionResult> AddItems(items newItems)
         {
             var total = await _daprClient.GetStateAsync<int>(storeName, key);
             await _daprClient.SaveStateAsync(storeName, key, total + newItems.total);
